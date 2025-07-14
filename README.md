@@ -1,15 +1,22 @@
-# 🌍 TimeAtlas – Ülke ve Şehre Göre Canlı Saat
+# TimeAtlas
 
-TimeAtlas , kullanıcıların bir ülke ve şehir seçerek seçilen lokasyona ait **canlı saati** görebildiği, mobil uyumlu ve modern bir web uygulamasıdır.
+🌍 **TimeAtlas**, dünyanın farklı ülkelerinden şehirlerin yerel saatlerini öğrenebileceğiniz modern, responsive bir zaman uygulamasıdır.
 
 ## 🚀 Özellikler
 
-- ✅ Ülke ve şehir seçimi (gelişmiş şehir/ülke listesi)
-- ⏰ Gerçek zamanlı saat gösterimi (TimeZone ile tam senkronizasyon)
-- 🌗 Otomatik gün/gece teması (ikon + arkaplan rengi değişir)
-- 📱 Mobil uyumlu arayüz
-- 🌐 Arial font ve sade, şık tasarım
-- 🔒 MIT Lisanslı (ticari kullanım serbesttir)
+- Ülke seçimiyle otomatik şehir listesi
+- Canlı saat gösterimi
+- Gece/gündüz teması (otomatik)
+- Modern cam efektli tasarım (glassmorphism)
+- Mobil uyumlu (responsive)
+- MIT Lisansı
 
+## 🔧 Kullanım
 
+1. `index.html` dosyasını tarayıcınızda açın.
+2. Ülke seçin → Şehir seçin → Anlık saat görüntülenir.
 
+## 🎨 Geliştirici
+
+**Mustidevelope**  
+MIT Lisansı – © All Rights Reserved 2025
