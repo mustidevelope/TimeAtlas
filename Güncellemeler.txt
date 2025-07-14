@@ -1,0 +1,4 @@
+1.0 Update Notes
+-
+1.0 ile Sitemiz Github Pages Üzerinden Kurulmuştur 
+Açık Kodlayabilirsiniz <3
