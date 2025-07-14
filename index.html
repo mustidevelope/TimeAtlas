@@ -1,27 +1,39 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>TimeAtlas</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css" />
 </head>
-<body class="day">
-  <div class="container fade-in slide-down">
+<body>
+  <div class="container">
     <h1>TimeAtlas</h1>
 
     <select id="country-select" class="select-bar">
       <option value="">Ülke Seçiniz</option>
+      <!-- Ülkeler -->
       <option value="TR">Türkiye</option>
-      <option value="US">Amerika</option>
+      <option value="US">Amerika Birleşik Devletleri</option>
       <option value="BR">Brezilya</option>
+      <option value="DE">Almanya</option>
       <option value="FR">Fransa</option>
+      <option value="IT">İtalya</option>
       <option value="RU">Rusya</option>
-      <option value="AU">Avustralya</option>
-      <option value="IN">Hindistan</option>
       <option value="CN">Çin</option>
+      <option value="JP">Japonya</option>
+      <option value="IN">Hindistan</option>
+      <option value="GB">Birleşik Krallık</option>
+      <option value="CA">Kanada</option>
+      <option value="MX">Meksika</option>
+      <option value="AR">Arjantin</option>
+      <option value="ES">İspanya</option>
+      <option value="SA">Suudi Arabistan</option>
+      <option value="AU">Avustralya</option>
       <option value="ZA">Güney Afrika</option>
-      <!-- daha fazla ülke -->
+      <option value="EG">Mısır</option>
+      <option value="KR">Güney Kore</option>
+      <!-- 30+ daha eklenebilir -->
     </select>
 
     <select id="city-select" class="select-bar hidden">
@@ -29,11 +41,9 @@
     </select>
 
     <div id="time-display" class="hidden">00:00</div>
-
-    <footer>
-      MIT Lisansı – Mustidevelope © All Rights Reserved 2025
-    </footer>
   </div>
+
+  <footer>MIT Lisansı – Mustidevelope © All Rights Reserved 2025</footer>
 
   <script src="script.js"></script>
 </body>
