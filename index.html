@@ -10,29 +10,22 @@
 <body id="body">
   <div class="container">
     <h1>TimeAtlas</h1>
-    <select id="country" class="select-bar">
-      <option value="">Ülke Seçiniz</option>
-      <option value="tr">Türkiye</option>
-      <option value="us">ABD</option>
-      <option value="de">Almanya</option>
-      <option value="fr">Fransa</option>
-      <option value="jp">Japonya</option>
-      <option value="gb">İngiltere</option>
-      <option value="in">Hindistan</option>
-      <option value="br">Brezilya</option>
-      <option value="ru">Rusya</option>
-      <option value="cn">Çin</option>
-      <option value="ca">Kanada</option>
-      <option value="au">Avustralya</option>
-      <option value="za">Güney Afrika</option>
-      <option value="mx">Meksika</option>
-      <option value="ar">Arjantin</option>
-      <option value="eg">Mısır</option>
-      <option value="kr">Güney Kore</option>
-      <option value="sa">Suudi Arabistan</option>
+
+    <select id="continent" class="select-bar">
+      <option value="">Kıta Seçiniz</option>
+      <option value="asia">Asya</option>
+      <option value="europe">Avrupa</option>
+      <option value="south-america">Güney Amerika</option>
+      <option value="north-america">Kuzey Amerika</option>
+      <option value="africa">Afrika</option>
+      <option value="oceania">Okyanusya</option>
     </select>
 
-    <div id="city-container">
+    <select id="country" class="select-bar hidden">
+      <option value="">Ülke Seçiniz</option>
+    </select>
+
+    <div id="city-container" class="hidden">
       <select id="city" class="select-bar">
         <option value="">Şehir Seçiniz</option>
       </select>
@@ -47,6 +40,7 @@
   </footer>
 
   <script>
+    const continentSelect = document.getElementById("continent");
     const countrySelect = document.getElementById("country");
     const citySelect = document.getElementById("city");
     const cityContainer = document.getElementById("city-container");
@@ -54,59 +48,83 @@
     const icon = document.getElementById("icon");
     const body = document.getElementById("body");
 
-    const cities = {
-      tr: [
-        "Europe/Istanbul", "Europe/Istanbul", // Ankara için de Istanbul gösterilecek çünkü ayrı timezone'u yok
-        "Europe/Istanbul", "Europe/Istanbul", "Europe/Istanbul", "Europe/Istanbul", "Europe/Istanbul", "Europe/Istanbul",
-        "Europe/Istanbul", "Europe/Istanbul", "Europe/Istanbul", "Europe/Istanbul", "Europe/Istanbul", "Europe/Istanbul",
-        "Europe/Istanbul", "Europe/Istanbul", "Europe/Istanbul", "Europe/Istanbul", "Europe/Istanbul", "Europe/Istanbul",
-        "Europe/Istanbul", "Europe/Istanbul", "Europe/Istanbul", "Europe/Istanbul", "Europe/Istanbul", "Europe/Istanbul",
-        "Europe/Istanbul", "Europe/Istanbul", "Europe/Istanbul", "Europe/Istanbul", "Europe/Istanbul", "Europe/Istanbul",
-        "Europe/Istanbul", "Europe/Istanbul", "Europe/Istanbul", "Europe/Istanbul", "Europe/Istanbul", "Europe/Istanbul",
-        "Europe/Istanbul", "Europe/Istanbul", "Europe/Istanbul", "Europe/Istanbul", "Europe/Istanbul", "Europe/Istanbul",
-        "Europe/Istanbul", "Europe/Istanbul", "Europe/Istanbul", "Europe/Istanbul", "Europe/Istanbul", "Europe/Istanbul",
-        "Europe/Istanbul", "Europe/Istanbul", "Europe/Istanbul", "Europe/Istanbul", "Europe/Istanbul", "Europe/Istanbul",
-        "Europe/Istanbul", "Europe/Istanbul", "Europe/Istanbul", "Europe/Istanbul", "Europe/Istanbul", "Europe/Istanbul",
-        "Europe/Istanbul", "Europe/Istanbul", "Europe/Istanbul", "Europe/Istanbul", "Europe/Istanbul", "Europe/Istanbul",
-        "Europe/Istanbul", "Europe/Istanbul", "Europe/Istanbul", "Europe/Istanbul", "Europe/Istanbul", "Europe/Istanbul",
-        "Europe/Istanbul", "Europe/Istanbul", "Europe/Istanbul", "Europe/Istanbul", "Europe/Istanbul"
-      ],
-      us: ["America/New_York", "America/Los_Angeles", "America/Chicago", "America/Denver"],
-      de: ["Europe/Berlin", "Europe/Berlin"],
-      fr: ["Europe/Paris", "Europe/Paris"],
-      jp: ["Asia/Tokyo", "Asia/Tokyo"],
-      gb: ["Europe/London", "Europe/London"],
-      in: ["Asia/Kolkata", "Asia/Kolkata"],
-      br: ["America/Sao_Paulo", "America/Fortaleza"],
-      ru: ["Europe/Moscow", "Asia/Yekaterinburg", "Asia/Vladivostok"],
-      cn: ["Asia/Shanghai", "Asia/Shanghai"],
-      ca: ["America/Toronto", "America/Vancouver"],
-      au: ["Australia/Sydney", "Australia/Melbourne", "Australia/Perth"],
-      za: ["Africa/Johannesburg"],
-      mx: ["America/Mexico_City", "America/Cancun"],
-      ar: ["America/Argentina/Buenos_Aires"],
-      eg: ["Africa/Cairo"],
-      kr: ["Asia/Seoul"],
-      sa: ["Asia/Riyadh"]
+    const data = {
+      asia: {
+        tr: ["Europe/Istanbul"],
+        jp: ["Asia/Tokyo"],
+        cn: ["Asia/Shanghai"],
+        kr: ["Asia/Seoul"],
+        in: ["Asia/Kolkata"],
+        sa: ["Asia/Riyadh"],
+        id: ["Asia/Jakarta"]
+      },
+      europe: {
+        de: ["Europe/Berlin"],
+        fr: ["Europe/Paris"],
+        gb: ["Europe/London"],
+        it: ["Europe/Rome"],
+        es: ["Europe/Madrid"],
+        ru: ["Europe/Moscow"]
+      },
+      "south-america": {
+        br: ["America/Sao_Paulo"],
+        ar: ["America/Argentina/Buenos_Aires"],
+        co: ["America/Bogota"]
+      },
+      "north-america": {
+        us: ["America/New_York", "America/Chicago", "America/Denver", "America/Los_Angeles"],
+        ca: ["America/Toronto", "America/Vancouver"],
+        mx: ["America/Mexico_City"]
+      },
+      africa: {
+        eg: ["Africa/Cairo"],
+        za: ["Africa/Johannesburg"],
+        ng: ["Africa/Lagos"]
+      },
+      oceania: {
+        au: ["Australia/Sydney", "Australia/Perth"]
+      }
     };
 
     let currentTimeZone = null;
 
+    continentSelect.addEventListener("change", () => {
+      const selectedContinent = continentSelect.value;
+      countrySelect.innerHTML = '<option value="">Ülke Seçiniz</option>';
+      citySelect.innerHTML = '<option value="">Şehir Seçiniz</option>';
+      cityContainer.classList.add("hidden");
+      timeDisplay.textContent = "";
+      icon.innerHTML = "";
+
+      if (data[selectedContinent]) {
+        Object.keys(data[selectedContinent]).forEach(countryCode => {
+          const option = document.createElement("option");
+          option.value = countryCode;
+          option.textContent = countryCode.toUpperCase();
+          countrySelect.appendChild(option);
+        });
+        countrySelect.classList.remove("hidden");
+      } else {
+        countrySelect.classList.add("hidden");
+      }
+    });
+
     countrySelect.addEventListener("change", () => {
+      const selectedContinent = continentSelect.value;
       const selectedCountry = countrySelect.value;
       citySelect.innerHTML = '<option value="">Şehir Seçiniz</option>';
 
-      if (cities[selectedCountry]) {
-        const uniqueTz = [...new Set(cities[selectedCountry])];
-        uniqueTz.forEach(tz => {
+      if (data[selectedContinent] && data[selectedContinent][selectedCountry]) {
+        const tzs = [...new Set(data[selectedContinent][selectedCountry])];
+        tzs.forEach(tz => {
           const option = document.createElement("option");
           option.value = tz;
           option.textContent = tz.split("/")[1].replace(/_/g, " ");
           citySelect.appendChild(option);
         });
-        cityContainer.classList.add("visible");
+        cityContainer.classList.remove("hidden");
       } else {
-        cityContainer.classList.remove("visible");
+        cityContainer.classList.add("hidden");
         timeDisplay.textContent = "";
         icon.innerHTML = "";
       }
