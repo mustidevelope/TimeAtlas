@@ -9,29 +9,19 @@
 </head>
 <body id="body">
   <div class="container">
-    <h1>TimeAtlas</h1>
+    <h1 class="fade-in">TimeAtlas</h1>
 
-    <select id="continent" class="select-bar">
-      <option value="">Kıta Seçiniz</option>
-      <option value="asia">Asya</option>
-      <option value="europe">Avrupa</option>
-      <option value="south-america">Güney Amerika</option>
-      <option value="north-america">Kuzey Amerika</option>
-      <option value="africa">Afrika</option>
-      <option value="oceania">Okyanusya</option>
-    </select>
-
-    <select id="country" class="select-bar hidden">
+    <select id="country" class="select-bar slide-down">
       <option value="">Ülke Seçiniz</option>
     </select>
 
-    <div id="city-container" class="hidden">
+    <div id="city-container" class="hidden fade-in">
       <select id="city" class="select-bar">
         <option value="">Şehir Seçiniz</option>
       </select>
     </div>
 
-    <div id="time-display"></div>
+    <div id="time-display" class="fade-in"></div>
     <div id="icon" class="icon"></div>
   </div>
 
@@ -40,7 +30,6 @@
   </footer>
 
   <script>
-    const continentSelect = document.getElementById("continent");
     const countrySelect = document.getElementById("country");
     const citySelect = document.getElementById("city");
     const cityContainer = document.getElementById("city-container");
@@ -49,73 +38,33 @@
     const body = document.getElementById("body");
 
     const data = {
-      asia: {
-        tr: ["Europe/Istanbul"],
-        jp: ["Asia/Tokyo"],
-        cn: ["Asia/Shanghai"],
-        kr: ["Asia/Seoul"],
-        in: ["Asia/Kolkata"],
-        sa: ["Asia/Riyadh"],
-        id: ["Asia/Jakarta"]
-      },
-      europe: {
-        de: ["Europe/Berlin"],
-        fr: ["Europe/Paris"],
-        gb: ["Europe/London"],
-        it: ["Europe/Rome"],
-        es: ["Europe/Madrid"],
-        ru: ["Europe/Moscow"]
-      },
-      "south-america": {
-        br: ["America/Sao_Paulo"],
-        ar: ["America/Argentina/Buenos_Aires"],
-        co: ["America/Bogota"]
-      },
-      "north-america": {
-        us: ["America/New_York", "America/Chicago", "America/Denver", "America/Los_Angeles"],
-        ca: ["America/Toronto", "America/Vancouver"],
-        mx: ["America/Mexico_City"]
-      },
-      africa: {
-        eg: ["Africa/Cairo"],
-        za: ["Africa/Johannesburg"],
-        ng: ["Africa/Lagos"]
-      },
-      oceania: {
-        au: ["Australia/Sydney", "Australia/Perth"]
-      }
+      tr: ["Europe/Istanbul", "Europe/Ankara", "Europe/Izmir", "Europe/Bursa", "Europe/Adana"],
+      us: ["America/New_York", "America/Chicago", "America/Los_Angeles", "America/Denver"],
+      br: ["America/Sao_Paulo", "America/Fortaleza", "America/Recife", "America/Bahia"],
+      de: ["Europe/Berlin", "Europe/Busingen"],
+      fr: ["Europe/Paris"],
+      jp: ["Asia/Tokyo"],
+      cn: ["Asia/Shanghai"],
+      in: ["Asia/Kolkata"],
+      ru: ["Europe/Moscow", "Asia/Yekaterinburg", "Asia/Novosibirsk", "Asia/Vladivostok"],
+      au: ["Australia/Sydney", "Australia/Melbourne", "Australia/Brisbane", "Australia/Perth"]
     };
+
+    Object.keys(data).forEach(countryCode => {
+      const option = document.createElement("option");
+      option.value = countryCode;
+      option.textContent = countryCode.toUpperCase();
+      countrySelect.appendChild(option);
+    });
 
     let currentTimeZone = null;
 
-    continentSelect.addEventListener("change", () => {
-      const selectedContinent = continentSelect.value;
-      countrySelect.innerHTML = '<option value="">Ülke Seçiniz</option>';
-      citySelect.innerHTML = '<option value="">Şehir Seçiniz</option>';
-      cityContainer.classList.add("hidden");
-      timeDisplay.textContent = "";
-      icon.innerHTML = "";
-
-      if (data[selectedContinent]) {
-        Object.keys(data[selectedContinent]).forEach(countryCode => {
-          const option = document.createElement("option");
-          option.value = countryCode;
-          option.textContent = countryCode.toUpperCase();
-          countrySelect.appendChild(option);
-        });
-        countrySelect.classList.remove("hidden");
-      } else {
-        countrySelect.classList.add("hidden");
-      }
-    });
-
     countrySelect.addEventListener("change", () => {
-      const selectedContinent = continentSelect.value;
       const selectedCountry = countrySelect.value;
       citySelect.innerHTML = '<option value="">Şehir Seçiniz</option>';
 
-      if (data[selectedContinent] && data[selectedContinent][selectedCountry]) {
-        const tzs = [...new Set(data[selectedContinent][selectedCountry])];
+      if (data[selectedCountry]) {
+        const tzs = [...new Set(data[selectedCountry])];
         tzs.forEach(tz => {
           const option = document.createElement("option");
           option.value = tz;
