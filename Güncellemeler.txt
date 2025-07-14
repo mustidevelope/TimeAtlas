@@ -7,3 +7,8 @@ Açık Kodlayabilirsiniz <3
 
 1.7 ile Sitemizdeki Ülke Ve Şehirler Geliştirildi
 Sorunsuza Yakın
+
+2.4 Update Notes
+
+2.4 ile Kıtalar Kaldırıldı 
+Sorunsuz Bir Güncelleme Geldi
