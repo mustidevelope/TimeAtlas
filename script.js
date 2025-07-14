@@ -1,89 +1,56 @@
-const countries = {
-  "TR": {
-    timezone: "Europe/Istanbul",
-    cities: ["İstanbul", "Ankara", "İzmir", "Antalya", "Bursa", "Adana", "Konya", "Gaziantep", "Samsun", "Trabzon", "Van", "Kayseri", "Mersin", "Eskişehir", "Erzurum", "Diyarbakır", "Malatya", "Sivas", "Kocaeli", "Denizli", "Manisa", "Aydın", "Balıkesir", "Şanlıurfa", "Hatay", "Çanakkale", "Rize", "Ordu", "Kahramanmaraş", "Tekirdağ", "Zonguldak"]
-  },
-  "US": {
-    timezone: "America/New_York",
-    cities: ["New York", "Los Angeles", "Chicago", "Houston", "Phoenix", "Philadelphia", "San Diego", "Dallas", "Austin", "San Jose"]
-  },
-  "BR": {
-    timezone: "America/Sao_Paulo",
-    cities: ["São Paulo", "Rio de Janeiro", "Brasília", "Salvador", "Fortaleza", "Belo Horizonte", "Manaus", "Curitiba", "Recife", "Porto Alegre"]
-  },
-  "FR": {
-    timezone: "Europe/Paris",
-    cities: ["Paris", "Marseille", "Lyon", "Toulouse", "Nice", "Nantes", "Strasbourg", "Montpellier", "Bordeaux", "Lille"]
-  },
-  "RU": {
-    timezone: "Europe/Moscow",
-    cities: ["Moskova", "St. Petersburg", "Kazan", "Novosibirsk", "Yekaterinburg", "Omsk", "Rostov", "Perm", "Krasnoyarsk", "Vladivostok"]
-  },
-  "AU": {
-    timezone: "Australia/Sydney",
-    cities: ["Sydney", "Melbourne", "Brisbane", "Perth", "Adelaide", "Canberra", "Hobart", "Darwin", "Gold Coast", "Newcastle"]
-  },
-  "IN": {
-    timezone: "Asia/Kolkata",
-    cities: ["Delhi", "Mumbai", "Bangalore", "Chennai", "Hyderabad", "Ahmedabad", "Pune", "Jaipur", "Lucknow", "Kolkata"]
-  },
-  "CN": {
-    timezone: "Asia/Shanghai",
-    cities: ["Pekin", "Şangay", "Guangzhou", "Shenzhen", "Tianjin", "Wuhan", "Chengdu", "Nanjing", "Hangzhou", "Chongqing"]
-  },
-  "ZA": {
-    timezone: "Africa/Johannesburg",
-    cities: ["Cape Town", "Johannesburg", "Durban", "Pretoria", "Port Elizabeth", "Bloemfontein", "Soweto", "East London", "Polokwane", "Kimberley"]
-  }
+const countrySelect = document.getElementById("country-select");
+const citySelect = document.getElementById("city-select");
+const timeDisplay = document.getElementById("time-display");
+
+const cityData = {
+  TR: ["İstanbul", "Ankara", "İzmir", "Bursa", "Adana", "Antalya", "Gaziantep", "Konya", "Kayseri", "Mersin", "Diyarbakır", "Samsun", "Trabzon", "Erzurum", "Malatya", "Sakarya", "Eskişehir", "Manisa", "Denizli", "Kahramanmaraş", "Van", "Şanlıurfa", "Batman", "Ordu", "Aydın", "Balıkesir", "Afyon", "Kocaeli", "Rize", "Zonguldak", "Hatay", "Kütahya", "Elazığ", "Çanakkale", "Tekirdağ", "Isparta", "Muğla", "Yozgat", "Tokat", "Uşak", "Nevşehir", "Sivas", "Karabük", "Giresun", "Aksaray", "Bolu", "Niğde", "Bartın", "Bilecik"],
+  US: ["New York", "Los Angeles", "Chicago", "Houston", "Phoenix", "San Diego", "Dallas", "San Jose", "Austin", "Jacksonville", "Fort Worth", "Columbus", "San Francisco", "Charlotte", "Indianapolis", "Seattle", "Denver", "Washington", "Boston", "El Paso", "Detroit", "Nashville", "Portland", "Memphis", "Oklahoma City", "Las Vegas", "Louisville", "Baltimore", "Milwaukee", "Albuquerque", "Tucson", "Fresno", "Sacramento", "Kansas City", "Mesa", "Atlanta", "Miami", "Cleveland", "Minneapolis", "Tulsa", "Wichita", "Arlington", "Tampa", "Bakersfield", "Aurora", "Honolulu", "Anaheim", "Lexington", "Stockton", "Plano"],
+  BR: ["São Paulo", "Rio de Janeiro", "Brasília", "Salvador", "Fortaleza", "Belo Horizonte", "Manaus", "Curitiba", "Recife", "Porto Alegre", "Belém", "Goiânia", "Guarulhos", "Campinas", "São Luís", "São Gonçalo", "Maceió", "Duque de Caxias", "Nova Iguaçu", "São Bernardo do Campo"],
+  // Diğer ülkeleri benzer şekilde ekleyebilirsin...
 };
 
-const countrySelect = document.getElementById('country-select');
-const citySelect = document.getElementById('city-select');
-const timeDisplay = document.getElementById('time-display');
-
-countrySelect.addEventListener('change', () => {
-  const countryCode = countrySelect.value;
+countrySelect.addEventListener("change", () => {
+  const selectedCountry = countrySelect.value;
   citySelect.innerHTML = '<option value="">Şehir Seçiniz</option>';
-  if (countryCode && countries[countryCode]) {
-    const cityList = countries[countryCode].cities;
-    cityList.forEach(city => {
-      const option = document.createElement('option');
+
+  if (selectedCountry && cityData[selectedCountry]) {
+    cityData[selectedCountry].forEach(city => {
+      const option = document.createElement("option");
       option.value = city;
       option.textContent = city;
       citySelect.appendChild(option);
     });
-    citySelect.classList.remove('hidden');
+
+    citySelect.classList.remove("hidden");
   } else {
-    citySelect.classList.add('hidden');
-    timeDisplay.classList.add('hidden');
+    citySelect.classList.add("hidden");
+    timeDisplay.classList.add("hidden");
   }
 });
 
-citySelect.addEventListener('change', () => {
-  const countryCode = countrySelect.value;
-  if (countryCode && countries[countryCode]) {
-    const timezone = countries[countryCode].timezone;
-    showTime(timezone);
-  }
+citySelect.addEventListener("change", () => {
+  const city = citySelect.value;
+  if (!city) return;
+
+  fetch(`https://worldtimeapi.org/api/timezone`)
+    .then(res => res.json())
+    .then(data => {
+      const timezone = data.find(zone => zone.toLowerCase().includes(city.toLowerCase()));
+      if (timezone) {
+        fetch(`https://worldtimeapi.org/api/timezone/${timezone}`)
+          .then(res => res.json())
+          .then(timeData => {
+            const time = new Date(timeData.datetime);
+            const hours = time.getHours().toString().padStart(2, '0');
+            const minutes = time.getMinutes().toString().padStart(2, '0');
+            timeDisplay.textContent = `${hours}:${minutes}`;
+            timeDisplay.classList.remove("hidden");
+
+            document.body.classList.toggle("night", hours < 6 || hours > 18);
+            document.body.classList.toggle("day", hours >= 6 && hours <= 18);
+          });
+      } else {
+        timeDisplay.textContent = "Zaman alınamadı";
+      }
+    });
 });
-
-function showTime(timezone) {
-  const now = new Date();
-  const localTime = now.toLocaleTimeString('tr-TR', {
-    hour: '2-digit',
-    minute: '2-digit',
-    timeZone: timezone
-  });
-  timeDisplay.textContent = `Saat: ${localTime}`;
-  timeDisplay.classList.remove('hidden');
-
-  // Tema geçişi
-  const hour = parseInt(now.toLocaleString("en-US", { hour: "2-digit", hour12: false, timeZone: timezone }));
-  if (hour >= 6 && hour < 18) {
-    document.body.classList.add('day');
-    document.body.classList.remove('night');
-  } else {
-    document.body.classList.add('night');
-    document.body.classList.remove('day');
-  }
-}
