@@ -2,3 +2,8 @@
 -
 1.0 ile Sitemiz Github Pages Üzerinden Kurulmuştur 
 Açık Kodlayabilirsiniz <3
+
+1.7 Update Notes 
+
+1.7 ile Sitemizdeki Ülke Ve Şehirler Geliştirildi
+Sorunsuza Yakın
