@@ -1,91 +1,117 @@
-body {
-  font-family: 'Arial', sans-serif;
-  margin: 0;
-  padding: 0;
-  background-color: #f0f2f5;
-  transition: background-color 0.5s;
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-}
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>TimeAtlas</title>
+  <link href="https://fonts.googleapis.com/css2?family=Arial&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body id="body">
+  <div class="container">
+    <h1>TimeAtlas</h1>
 
-.day {
-  background-color: #e0f7fa;
-  color: #000;
-}
+    <select id="country" class="select-bar">
+      <option value="">Ülke Seçiniz</option>
+    </select>
 
-.night {
-  background-color: #0d1117;
-  color: #fff;
-}
+    <div id="city-container" class="hidden">
+      <select id="city" class="select-bar">
+        <option value="">Şehir Seçiniz</option>
+      </select>
+    </div>
 
-.container {
-  text-align: center;
-  padding: 2rem;
-}
+    <div id="time-display"></div>
+    <div id="icon" class="icon"></div>
+  </div>
 
-h1 {
-  margin-bottom: 2rem;
-  font-size: 2.5rem;
-}
+  <footer>
+    MIT Lisansı – Mustidevelope © All Rights Reserved 2025
+  </footer>
 
-.select-bar {
-  display: block;
-  margin: 1rem auto;
-  padding: 0.75rem 1rem;
-  border: none;
-  border-radius: 12px;
-  width: 80%;
-  max-width: 400px;
-  font-size: 1rem;
-  background-color: #ffffffee;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
-  transition: opacity 0.3s ease;
-}
+  <script>
+    const countrySelect = document.getElementById("country");
+    const citySelect = document.getElementById("city");
+    const cityContainer = document.getElementById("city-container");
+    const timeDisplay = document.getElementById("time-display");
+    const icon = document.getElementById("icon");
+    const body = document.getElementById("body");
 
-.select-bar.hidden {
-  opacity: 0;
-  pointer-events: none;
-}
+    const data = {
+      tr: ["Europe/Istanbul"],
+      us: ["America/New_York", "America/Chicago", "America/Los_Angeles", "America/Denver"],
+      br: ["America/Sao_Paulo", "America/Fortaleza", "America/Recife", "America/Bahia"],
+      de: ["Europe/Berlin", "Europe/Busingen"],
+      fr: ["Europe/Paris"],
+      jp: ["Asia/Tokyo"],
+      cn: ["Asia/Shanghai"],
+      in: ["Asia/Kolkata"],
+      ru: ["Europe/Moscow", "Asia/Yekaterinburg", "Asia/Novosibirsk", "Asia/Vladivostok"],
+      au: ["Australia/Sydney", "Australia/Melbourne", "Australia/Brisbane", "Australia/Perth"]
+    };
 
-#time-display {
-  margin-top: 2rem;
-  font-size: 1.5rem;
-  font-weight: bold;
-}
+    Object.keys(data).forEach(countryCode => {
+      const option = document.createElement("option");
+      option.value = countryCode;
+      option.textContent = countryCode.toUpperCase();
+      countrySelect.appendChild(option);
+    });
 
-.icon {
-  font-size: 2rem;
-  margin-top: 1rem;
-}
+    let currentTimeZone = null;
 
-footer {
-  margin-top: auto;
-  padding: 1rem;
-  text-align: center;
-  font-size: 0.9rem;
-  opacity: 0.7;
-  background: #fff;
-  width: 100%;
-  position: relative;
-  bottom: 0;
-  left: 0;
-}
+    countrySelect.addEventListener("change", () => {
+      const selectedCountry = countrySelect.value;
+      citySelect.innerHTML = '<option value="">Şehir Seçiniz</option>';
 
-@media (max-width: 600px) {
-  h1 {
-    font-size: 2rem;
-  }
+      if (data[selectedCountry]) {
+        const tzs = [...new Set(data[selectedCountry])];
+        tzs.forEach(tz => {
+          const option = document.createElement("option");
+          option.value = tz;
+          option.textContent = tz.split("/")[1].replace(/_/g, " ");
+          citySelect.appendChild(option);
+        });
+        cityContainer.classList.remove("hidden");
+      } else {
+        cityContainer.classList.add("hidden");
+        timeDisplay.textContent = "";
+        icon.innerHTML = "";
+      }
+    });
 
-  .select-bar {
-    width: 90%;
-    font-size: 0.9rem;
-  }
+    citySelect.addEventListener("change", () => {
+      currentTimeZone = citySelect.value;
+      updateTime();
+    });
 
-  #time-display {
-    font-size: 1.2rem;
-  }
-}
+    function updateTime() {
+      if (!currentTimeZone) return;
+      const now = new Date();
+      const timeString = now.toLocaleTimeString("tr-TR", {
+        timeZone: currentTimeZone,
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit'
+      });
+      timeDisplay.textContent = `Saat (${currentTimeZone.split("/")[1]}): ${timeString}`;
+      const hourStr = now.toLocaleTimeString("en-US", { hour: '2-digit', hour12: false, timeZone: currentTimeZone });
+      updateTheme(hourStr);
+    }
 
+    function updateTheme(hourStr) {
+      const hour = parseInt(hourStr);
+      if (hour >= 6 && hour < 18) {
+        body.classList.remove("night");
+        body.classList.add("day");
+        icon.innerHTML = "☀️";
+      } else {
+        body.classList.remove("day");
+        body.classList.add("night");
+        icon.innerHTML = "🌙";
+      }
+    }
+
+    setInterval(updateTime, 1000);
+  </script>
+</body>
+</html>
