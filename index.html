@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Ülke ve Şehir Seçici</title>
+  <link href="https://fonts.googleapis.com/css2?family=Arial&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body id="body">
+  <div class="container">
+    <select id="country" class="select-bar">
+      <option value="">Ülke Seçiniz</option>
+      <option value="tr">Türkiye</option>
+      <option value="us">ABD</option>
+      <option value="de">Almanya</option>
+      <option value="fr">Fransa</option>
+      <option value="jp">Japonya</option>
+      <option value="gb">İngiltere</option>
+      <option value="in">Hindistan</option>
+      <option value="br">Brezilya</option>
+      <option value="ru">Rusya</option>
+      <option value="cn">Çin</option>
+      <option value="ca">Kanada</option>
+      <option value="au">Avustralya</option>
+      <option value="za">Güney Afrika</option>
+      <option value="mx">Meksika</option>
+      <option value="ar">Arjantin</option>
+      <option value="eg">Mısır</option>
+      <option value="kr">Güney Kore</option>
+      <option value="sa">Suudi Arabistan</option>
+    </select>
+
+    <div id="city-container">
+      <select id="city" class="select-bar">
+        <option value="">Şehir Seçiniz</option>
+      </select>
+    </div>
+
+    <div id="time-display"></div>
+    <div id="icon" class="icon"></div>
+  </div>
+
+  <footer>
+    MIT Lisansı – Mustidevelope © All Rights Reserved 2025
+  </footer>
+
+  <script>
+    const countrySelect = document.getElementById("country");
+    const citySelect = document.getElementById("city");
+    const cityContainer = document.getElementById("city-container");
+    const timeDisplay = document.getElementById("time-display");
+    const icon = document.getElementById("icon");
+    const body = document.getElementById("body");
+
+    const cities = {
+      tr: ["Europe/Istanbul", "Europe/Ankara"],
+      us: ["America/New_York", "America/Los_Angeles", "America/Chicago", "America/Denver"],
+      de: ["Europe/Berlin", "Europe/Hamburg"],
+      fr: ["Europe/Paris", "Europe/Marseille"],
+      jp: ["Asia/Tokyo", "Asia/Osaka"],
+      gb: ["Europe/London", "Europe/Belfast"],
+      in: ["Asia/Kolkata", "Asia/Delhi"],
+      br: ["America/Sao_Paulo", "America/Fortaleza"],
+      ru: ["Europe/Moscow", "Asia/Yekaterinburg", "Asia/Vladivostok"],
+      cn: ["Asia/Shanghai", "Asia/Chongqing"],
+      ca: ["America/Toronto", "America/Vancouver"],
+      au: ["Australia/Sydney", "Australia/Melbourne", "Australia/Perth"],
+      za: ["Africa/Johannesburg"],
+      mx: ["America/Mexico_City", "America/Cancun"],
+      ar: ["America/Argentina/Buenos_Aires"],
+      eg: ["Africa/Cairo"],
+      kr: ["Asia/Seoul"],
+      sa: ["Asia/Riyadh"]
+    };
+
+    let currentTimeZone = null;
+
+    countrySelect.addEventListener("change", () => {
+      const selectedCountry = countrySelect.value;
+      citySelect.innerHTML = '<option value="">Şehir Seçiniz</option>';
+
+      if (cities[selectedCountry]) {
+        cities[selectedCountry].forEach(tz => {
+          const option = document.createElement("option");
+          option.value = tz;
+          option.textContent = tz.split("/")[1].replace(/_/g, " ");
+          citySelect.appendChild(option);
+        });
+        cityContainer.classList.add("visible");
+      } else {
+        cityContainer.classList.remove("visible");
+        timeDisplay.textContent = "";
+        icon.innerHTML = "";
+      }
+    });
+
+    citySelect.addEventListener("change", () => {
+      currentTimeZone = citySelect.value;
+      updateTime();
+    });
+
+    function updateTime() {
+      if (!currentTimeZone) return;
+      const now = new Date();
+      const timeString = now.toLocaleTimeString("tr-TR", {
+        timeZone: currentTimeZone,
+        hour: '2-digit',
+        minute: '2-digit',
+        second: '2-digit'
+      });
+      timeDisplay.textContent = `Saat (${currentTimeZone.split("/")[1]}): ${timeString}`;
+      const hourStr = now.toLocaleTimeString("en-US", { hour: '2-digit', hour12: false, timeZone: currentTimeZone });
+      updateTheme(hourStr);
+    }
+
+    function updateTheme(hourStr) {
+      const hour = parseInt(hourStr);
+      if (hour >= 6 && hour < 18) {
+        body.classList.remove("night");
+        body.classList.add("day");
+        icon.innerHTML = "☀️";
+      } else {
+        body.classList.remove("day");
+        body.classList.add("night");
+        icon.innerHTML = "🌙";
+      }
+    }
+
+    setInterval(updateTime, 1000);
+  </script>
+</body>
+</html>
