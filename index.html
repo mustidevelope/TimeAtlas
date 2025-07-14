@@ -1,117 +1,40 @@
 <!DOCTYPE html>
 <html lang="tr">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>TimeAtlas</title>
-  <link href="https://fonts.googleapis.com/css2?family=Arial&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style.css">
 </head>
-<body id="body">
-  <div class="container">
-    <h1 class="fade-in">TimeAtlas</h1>
+<body class="day">
+  <div class="container fade-in slide-down">
+    <h1>TimeAtlas</h1>
 
-    <select id="country" class="select-bar slide-down">
+    <select id="country-select" class="select-bar">
       <option value="">Ülke Seçiniz</option>
+      <option value="TR">Türkiye</option>
+      <option value="US">Amerika</option>
+      <option value="BR">Brezilya</option>
+      <option value="FR">Fransa</option>
+      <option value="RU">Rusya</option>
+      <option value="AU">Avustralya</option>
+      <option value="IN">Hindistan</option>
+      <option value="CN">Çin</option>
+      <option value="ZA">Güney Afrika</option>
+      <!-- daha fazla ülke -->
     </select>
 
-    <div id="city-container" class="hidden fade-in">
-      <select id="city" class="select-bar">
-        <option value="">Şehir Seçiniz</option>
-      </select>
-    </div>
+    <select id="city-select" class="select-bar hidden">
+      <option value="">Şehir Seçiniz</option>
+    </select>
 
-    <div id="time-display" class="fade-in"></div>
-    <div id="icon" class="icon"></div>
+    <div id="time-display" class="hidden">00:00</div>
+
+    <footer>
+      MIT Lisansı – Mustidevelope © All Rights Reserved 2025
+    </footer>
   </div>
 
-  <footer>
-    MIT Lisansı – Mustidevelope © All Rights Reserved 2025
-  </footer>
-
-  <script>
-    const countrySelect = document.getElementById("country");
-    const citySelect = document.getElementById("city");
-    const cityContainer = document.getElementById("city-container");
-    const timeDisplay = document.getElementById("time-display");
-    const icon = document.getElementById("icon");
-    const body = document.getElementById("body");
-
-    const data = {
-      tr: ["Europe/Istanbul", "Europe/Ankara", "Europe/Izmir", "Europe/Bursa", "Europe/Adana"],
-      us: ["America/New_York", "America/Chicago", "America/Los_Angeles", "America/Denver"],
-      br: ["America/Sao_Paulo", "America/Fortaleza", "America/Recife", "America/Bahia"],
-      de: ["Europe/Berlin", "Europe/Busingen"],
-      fr: ["Europe/Paris"],
-      jp: ["Asia/Tokyo"],
-      cn: ["Asia/Shanghai"],
-      in: ["Asia/Kolkata"],
-      ru: ["Europe/Moscow", "Asia/Yekaterinburg", "Asia/Novosibirsk", "Asia/Vladivostok"],
-      au: ["Australia/Sydney", "Australia/Melbourne", "Australia/Brisbane", "Australia/Perth"]
-    };
-
-    Object.keys(data).forEach(countryCode => {
-      const option = document.createElement("option");
-      option.value = countryCode;
-      option.textContent = countryCode.toUpperCase();
-      countrySelect.appendChild(option);
-    });
-
-    let currentTimeZone = null;
-
-    countrySelect.addEventListener("change", () => {
-      const selectedCountry = countrySelect.value;
-      citySelect.innerHTML = '<option value="">Şehir Seçiniz</option>';
-
-      if (data[selectedCountry]) {
-        const tzs = [...new Set(data[selectedCountry])];
-        tzs.forEach(tz => {
-          const option = document.createElement("option");
-          option.value = tz;
-          option.textContent = tz.split("/")[1].replace(/_/g, " ");
-          citySelect.appendChild(option);
-        });
-        cityContainer.classList.remove("hidden");
-      } else {
-        cityContainer.classList.add("hidden");
-        timeDisplay.textContent = "";
-        icon.innerHTML = "";
-      }
-    });
-
-    citySelect.addEventListener("change", () => {
-      currentTimeZone = citySelect.value;
-      updateTime();
-    });
-
-    function updateTime() {
-      if (!currentTimeZone) return;
-      const now = new Date();
-      const timeString = now.toLocaleTimeString("tr-TR", {
-        timeZone: currentTimeZone,
-        hour: '2-digit',
-        minute: '2-digit',
-        second: '2-digit'
-      });
-      timeDisplay.textContent = `Saat (${currentTimeZone.split("/")[1]}): ${timeString}`;
-      const hourStr = now.toLocaleTimeString("en-US", { hour: '2-digit', hour12: false, timeZone: currentTimeZone });
-      updateTheme(hourStr);
-    }
-
-    function updateTheme(hourStr) {
-      const hour = parseInt(hourStr);
-      if (hour >= 6 && hour < 18) {
-        body.classList.remove("night");
-        body.classList.add("day");
-        icon.innerHTML = "☀️";
-      } else {
-        body.classList.remove("day");
-        body.classList.add("night");
-        icon.innerHTML = "🌙";
-      }
-    }
-
-    setInterval(updateTime, 1000);
-  </script>
+  <script src="script.js"></script>
 </body>
 </html>
