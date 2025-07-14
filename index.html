@@ -3,12 +3,13 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Ülke ve Şehir Seçici</title>
+  <title>TimeAtlas</title>
   <link href="https://fonts.googleapis.com/css2?family=Arial&display=swap" rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
 </head>
 <body id="body">
   <div class="container">
+    <h1>TimeAtlas</h1>
     <select id="country" class="select-bar">
       <option value="">Ülke Seçiniz</option>
       <option value="tr">Türkiye</option>
@@ -54,16 +55,31 @@
     const body = document.getElementById("body");
 
     const cities = {
-      tr: ["Europe/Istanbul", "Europe/Ankara"],
+      tr: [
+        "Europe/Istanbul", "Europe/Istanbul", // Ankara için de Istanbul gösterilecek çünkü ayrı timezone'u yok
+        "Europe/Istanbul", "Europe/Istanbul", "Europe/Istanbul", "Europe/Istanbul", "Europe/Istanbul", "Europe/Istanbul",
+        "Europe/Istanbul", "Europe/Istanbul", "Europe/Istanbul", "Europe/Istanbul", "Europe/Istanbul", "Europe/Istanbul",
+        "Europe/Istanbul", "Europe/Istanbul", "Europe/Istanbul", "Europe/Istanbul", "Europe/Istanbul", "Europe/Istanbul",
+        "Europe/Istanbul", "Europe/Istanbul", "Europe/Istanbul", "Europe/Istanbul", "Europe/Istanbul", "Europe/Istanbul",
+        "Europe/Istanbul", "Europe/Istanbul", "Europe/Istanbul", "Europe/Istanbul", "Europe/Istanbul", "Europe/Istanbul",
+        "Europe/Istanbul", "Europe/Istanbul", "Europe/Istanbul", "Europe/Istanbul", "Europe/Istanbul", "Europe/Istanbul",
+        "Europe/Istanbul", "Europe/Istanbul", "Europe/Istanbul", "Europe/Istanbul", "Europe/Istanbul", "Europe/Istanbul",
+        "Europe/Istanbul", "Europe/Istanbul", "Europe/Istanbul", "Europe/Istanbul", "Europe/Istanbul", "Europe/Istanbul",
+        "Europe/Istanbul", "Europe/Istanbul", "Europe/Istanbul", "Europe/Istanbul", "Europe/Istanbul", "Europe/Istanbul",
+        "Europe/Istanbul", "Europe/Istanbul", "Europe/Istanbul", "Europe/Istanbul", "Europe/Istanbul", "Europe/Istanbul",
+        "Europe/Istanbul", "Europe/Istanbul", "Europe/Istanbul", "Europe/Istanbul", "Europe/Istanbul", "Europe/Istanbul",
+        "Europe/Istanbul", "Europe/Istanbul", "Europe/Istanbul", "Europe/Istanbul", "Europe/Istanbul", "Europe/Istanbul",
+        "Europe/Istanbul", "Europe/Istanbul", "Europe/Istanbul", "Europe/Istanbul", "Europe/Istanbul"
+      ],
       us: ["America/New_York", "America/Los_Angeles", "America/Chicago", "America/Denver"],
-      de: ["Europe/Berlin", "Europe/Hamburg"],
-      fr: ["Europe/Paris", "Europe/Marseille"],
-      jp: ["Asia/Tokyo", "Asia/Osaka"],
-      gb: ["Europe/London", "Europe/Belfast"],
-      in: ["Asia/Kolkata", "Asia/Delhi"],
+      de: ["Europe/Berlin", "Europe/Berlin"],
+      fr: ["Europe/Paris", "Europe/Paris"],
+      jp: ["Asia/Tokyo", "Asia/Tokyo"],
+      gb: ["Europe/London", "Europe/London"],
+      in: ["Asia/Kolkata", "Asia/Kolkata"],
       br: ["America/Sao_Paulo", "America/Fortaleza"],
       ru: ["Europe/Moscow", "Asia/Yekaterinburg", "Asia/Vladivostok"],
-      cn: ["Asia/Shanghai", "Asia/Chongqing"],
+      cn: ["Asia/Shanghai", "Asia/Shanghai"],
       ca: ["America/Toronto", "America/Vancouver"],
       au: ["Australia/Sydney", "Australia/Melbourne", "Australia/Perth"],
       za: ["Africa/Johannesburg"],
@@ -81,7 +97,8 @@
       citySelect.innerHTML = '<option value="">Şehir Seçiniz</option>';
 
       if (cities[selectedCountry]) {
-        cities[selectedCountry].forEach(tz => {
+        const uniqueTz = [...new Set(cities[selectedCountry])];
+        uniqueTz.forEach(tz => {
           const option = document.createElement("option");
           option.value = tz;
           option.textContent = tz.split("/")[1].replace(/_/g, " ");
